@@ -13,7 +13,7 @@
       become: false
       amazon.aws.s3_object:
         bucket: "{{ s3_bucket }}"
-        object: "{{ s3_war_file }}"
+        object: "addressbook/{{ s3_war_file }}"
         dest: "/tmp/{{ s3_war_file }}"
         mode: get
 
