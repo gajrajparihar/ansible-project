@@ -1,0 +1,47 @@
+---
+- name: Deploy WAR from S3
+  hosts: app
+  become: true
+
+  vars:    
+    war_file: "{{ app_name }}.war"
+    s3_war_file: "{{ app_name }}-{{ app_version }}-{{ env_name }}.war"
+
+  tasks:
+    - name: Download WAR
+      delegate_to: localhost
+      become: false
+      amazon.aws.s3_object:
+        bucket: "{{ s3_bucket }}"
+        object: "{{ env_name }}/{{ s3_war_file }}"
+        dest: "/tmp/{{ s3_war_file }}"
+        mode: get
+
+    - name: Remove default ROOT application
+      file:
+        path: "{{ tomcat_install_dir }}/webapps/ROOT"
+        state: absent
+
+    - name: Remove previous WAR
+      file:
+        path: "{{ tomcat_install_dir }}/webapps/{{ war_file }}"
+        state: absent
+
+    - name: Remove exploded application
+      file:
+        path: "{{ tomcat_install_dir }}/webapps/{{ app_name }}"
+        state: absent
+
+    - name: Rename catalina.out log file
+      shell: |
+        if [ -f "{{ tomcat_install_dir }}/logs/catalina.out" ]; then
+          mv "{{ tomcat_install_dir }}/logs/catalina.out" "{{ tomcat_install_dir }}/logs/catalina.out.{{ ansible_facts.date_time.date }}_{{ ansible_facts.date_time.time | replace(':', '-') }}"
+        fi
+
+    - name: Deploy WAR
+      copy:
+        src: "/tmp/{{ s3_war_file }}"
+        dest: "{{ tomcat_install_dir }}/webapps/{{ war_file }}"
+        owner: "{{ tomcat_user }}"
+        group: "{{ tomcat_group }}"
+        mode: "0644"
