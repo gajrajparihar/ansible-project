@@ -5,7 +5,7 @@
 
   vars:    
     war_file: "{{ app_name }}.war"
-    s3_war_file: "{{ app_name }}-{{ app_version }}-{{ env_name }}.war"
+    s3_war_file: "{{ app_name }}-{{ app_version }}.war"
 
   tasks:
     - name: Download WAR
@@ -13,7 +13,7 @@
       become: false
       amazon.aws.s3_object:
         bucket: "{{ s3_bucket }}"
-        object: "{{ env_name }}/{{ s3_war_file }}"
+        object: "{{ s3_war_file }}"
         dest: "/tmp/{{ s3_war_file }}"
         mode: get
 
