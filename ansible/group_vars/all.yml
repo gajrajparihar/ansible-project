@@ -5,3 +5,4 @@ tomcat_group: tomcat
 app_version: 2026.1.0
 app_name: addressbook
 s3_bucket: gajraj-test
+ansible_user: ec2-user
