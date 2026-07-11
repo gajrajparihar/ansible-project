@@ -3,9 +3,6 @@
   hosts: app
   become: true
 
-  env:
-    app_version: 2026.1.0
-
   vars:
     war_file: "{{ app_name }}.war"
     s3_war_file: "{{ app_name }}-{{ app_version }}.war"
