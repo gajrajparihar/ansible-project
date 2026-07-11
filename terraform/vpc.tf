@@ -8,7 +8,7 @@ module "vpc" {
 
   name                = var.vpc_name
   cidr                = var.cidr
-  azs                 = var.availability_zones
+  azs                 = local.selected_azs
   public_subnets      = var.public_subnets
   public_subnet_names = var.public_subnet_names
   private_subnets     = var.private_subnets
@@ -32,7 +32,7 @@ module "vpc" {
 
 resource "aws_vpc_endpoint" "s3-endpoint" {
   vpc_id            = module.vpc.vpc_id
-  service_name      = "com.amazonaws.eu-central-1.s3"
+  service_name      = "com.amazonaws.${data.aws_region.current.region}.s3"
   vpc_endpoint_type = "Gateway"
   tags = merge(local.common_tags, {
     Name = "s3-endpoint"

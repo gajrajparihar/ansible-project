@@ -1,5 +1,5 @@
 variable "project" {
-  default     = "Terraform-Training"
+  default     = "terraform-ansible"
 }
 
 
@@ -7,22 +7,14 @@ variable "project" {
 ###############    These variables  will be used for network definition   #############
 #######################################################################################
 
-variable "aws_region" {
-  default     = "eu-central-1"
-}
-
 variable "vpc_name" {
-  default     = "terraform-project-vpc"
+  default     = "terraform-ansible-vpc"
 }
 
 variable "cidr" {
   default     = "10.1.0.0/16"
 }
 
-
-variable "availability_zones" {
-  default = ["eu-central-1a", "eu-central-1b"]
-}
 
 variable "public_subnets" {
   default = ["10.1.255.0/24", "10.1.254.0/24"]
@@ -43,7 +35,7 @@ variable "private_subnet_names" {
 variable "ssl_policy" { default = "ELBSecurityPolicy-TLS13-1-2-2021-06" }
 
 variable "ec2_key_name" {
-  default     = "terraform-project"
+  default     = "terraform-ansible"
 }
 
 variable "ami_id" {

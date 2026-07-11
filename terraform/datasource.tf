@@ -1,4 +1,10 @@
 
+data "aws_region" "current" {}
+
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
 data "aws_vpc" "prod-vpc" {
   filter {
     name   = "tag:Name"
@@ -15,7 +21,7 @@ data "aws_nat_gateway" "prod-ng" {
 
   filter {
     name   = "tag:Name"
-    values = ["${var.vpc_name}-eu-central-1a"]
+    values = ["${var.vpc_name}-${local.selected_azs[0]}"]
   }
   
 }
