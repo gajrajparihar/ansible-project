@@ -2,14 +2,14 @@ resource "local_file" "ansible_inventory" {
 	filename = "${path.module}/../ansible/inventory.yml"
 	content = <<-EOT
 all:
-	children:
-		app:
-			hosts:
-				webserver1:
-					ansible_host: ${aws_instance.web_server[0].public_ip}
+  children:
+    app:
+      hosts:
+        webserver1:
+          ansible_host: ${aws_instance.web_server[0].public_ip}
 
-				webserver2:
-					ansible_host: ${aws_instance.web_server[1].public_ip}
+        webserver2:
+          ansible_host: ${aws_instance.web_server[1].public_ip}
 EOT
 }
 
