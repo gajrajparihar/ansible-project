@@ -15,8 +15,8 @@ module "vpc" {
   private_subnet_names = var.private_subnet_names
 
   enable_nat_gateway = true
-  single_nat_gateway = false
-  one_nat_gateway_per_az = true
+  single_nat_gateway = true
+  one_nat_gateway_per_az = false
   enable_dns_hostnames = true
   map_public_ip_on_launch = true
   public_subnet_tags = {
@@ -36,5 +36,44 @@ resource "aws_vpc_endpoint" "s3-endpoint" {
   vpc_endpoint_type = "Gateway"
   tags = merge(local.common_tags, {
     Name = "s3-endpoint"
+  })
+}
+
+resource "aws_vpc_endpoint" "ecr_api" {
+  vpc_id              = module.vpc.vpc_id
+  service_name        = "com.amazonaws.${data.aws_region.current.region}.ecr.api"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = module.vpc.private_subnets
+  security_group_ids  = [aws_security_group.vpce_interface.id]
+  private_dns_enabled = true
+
+  tags = merge(local.common_tags, {
+    Name = "ecr-api-endpoint"
+  })
+}
+
+resource "aws_vpc_endpoint" "ecr_dkr" {
+  vpc_id              = module.vpc.vpc_id
+  service_name        = "com.amazonaws.${data.aws_region.current.region}.ecr.dkr"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = module.vpc.private_subnets
+  security_group_ids  = [aws_security_group.vpce_interface.id]
+  private_dns_enabled = true
+
+  tags = merge(local.common_tags, {
+    Name = "ecr-dkr-endpoint"
+  })
+}
+
+resource "aws_vpc_endpoint" "logs" {
+  vpc_id              = module.vpc.vpc_id
+  service_name        = "com.amazonaws.${data.aws_region.current.region}.logs"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = module.vpc.private_subnets
+  security_group_ids  = [aws_security_group.vpce_interface.id]
+  private_dns_enabled = true
+
+  tags = merge(local.common_tags, {
+    Name = "logs-endpoint"
   })
 }

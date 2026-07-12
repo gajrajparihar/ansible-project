@@ -76,3 +76,26 @@ resource "aws_security_group" "ecs_tasks" {
     Name = "ecs_tasks"
   })
 }
+
+resource "aws_security_group" "vpce_interface" {
+  name   = "vpce_interface"
+  vpc_id = data.aws_vpc.prod-vpc.id
+
+  ingress {
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [aws_security_group.ecs_tasks.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(local.common_tags, {
+    Name = "vpce_interface"
+  })
+}

@@ -1,7 +1,7 @@
 
 resource "aws_cloudwatch_log_group" "addressbook" {
   name              = "/ecs/addressbook"
-  retention_in_days = 7
+  retention_in_days = 3
 
   tags = local.common_tags
 }
@@ -12,7 +12,7 @@ resource "aws_ecs_cluster" "addressbook" {
 
   setting {
     name  = "containerInsights"
-    value = "enabled"
+    value = "disabled"
   }
 
   tags = local.common_tags
